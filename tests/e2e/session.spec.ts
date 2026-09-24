@@ -4,5 +4,5 @@ test('browser starts signed in with the session created by the API', { tag: '@cr
   await page.goto('/');
 
   await expect(page.getByRole('link', { name: 'New Article' })).toBeVisible();
-  await expect(page.getByRole('link', { name: me.username })).toBeVisible();
+  await expect(page.locator('app-layout-header').getByRole('link', { name: me.username })).toBeVisible();
 });

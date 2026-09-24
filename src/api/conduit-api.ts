@@ -11,7 +11,7 @@ export type Comment = { id: number; body: string };
  */
 export class ConduitApi {
   constructor(
-    private readonly request: APIRequestContext,
+    readonly request: APIRequestContext,
     private readonly token?: string,
   ) {}
 
@@ -61,6 +61,18 @@ export class ConduitApi {
 
   addComment(slug: string, body: string): Promise<APIResponse> {
     return this.request.post(`/api/articles/${slug}/comments`, { data: { comment: { body } }, headers: this.headers() });
+  }
+
+  deleteComment(slug: string, id: number): Promise<APIResponse> {
+    return this.request.delete(`/api/articles/${slug}/comments/${id}`, { headers: this.headers() });
+  }
+
+  favorite(slug: string): Promise<APIResponse> {
+    return this.request.post(`/api/articles/${slug}/favorite`, { headers: this.headers() });
+  }
+
+  follow(username: string): Promise<APIResponse> {
+    return this.request.post(`/api/profiles/${username}/follow`, { headers: this.headers() });
   }
 
   currentUser(): Promise<APIResponse> {
