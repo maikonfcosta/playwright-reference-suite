@@ -11,13 +11,16 @@
     "report": "playwright show-report",
     "lint": "eslint .",
     "typecheck": "tsc --noEmit",
-    "flaky-report": "node scripts/flaky-report.ts test-results/results.json"
+    "flaky-report": "node scripts/flaky-report.ts test-results/results.json",
+    "demo": "playwright test --config playwright.demo.config.ts && node scripts/make-demo-gif.ts",
+    "badge": "node scripts/badge.ts test-results/results.json playwright-report/badge.json"
   },
   "devDependencies": {
     "@playwright/test": "1.63.0",
     "@types/node": "^24.0.0",
     "eslint": "^10.11.0",
     "eslint-plugin-playwright": "^2.12.0",
+    "ffmpeg-static": "^5.3.0",
     "typescript": "~6.0.0",
     "typescript-eslint": "^8.70.1"
   }
