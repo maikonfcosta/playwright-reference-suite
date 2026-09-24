@@ -2,7 +2,7 @@ import { test, expect } from '../fixtures';
 import { newArticle } from '../../src/data/factory';
 
 test.describe('articles', { tag: '@full' }, () => {
-  test('created article is readable by anyone and its tag is listed', async ({ myApi, api }) => {
+  test('created article is readable by anyone and findable by its tag', async ({ myApi, api }) => {
     const tag = `tag-${Date.now()}`;
     const article = await myApi.createArticleOk(newArticle({ tagList: [tag] }));
 
@@ -10,8 +10,9 @@ test.describe('articles', { tag: '@full' }, () => {
     expect(res.status()).toBe(200);
     expect((await res.json()).article).toMatchObject({ title: article.title, tagList: [tag] });
 
-    const tags = await (await api.request.get('/api/tags')).json();
-    expect(tags.tags).toContain(tag);
+    // Not /api/tags: it returns only the 10 most used tags, so a new tag may never show up there.
+    const byTag = await (await api.request.get('/api/articles', { params: { tag } })).json();
+    expect(byTag.articles.map((a: { slug: string }) => a.slug)).toEqual([article.slug]);
   });
 
   test('empty title is rejected', async ({ myApi }) => {

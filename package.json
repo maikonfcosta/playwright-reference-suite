@@ -6,11 +6,12 @@
     "app:up": "docker compose up -d --build --wait",
     "app:down": "docker compose down -v",
     "test": "playwright test",
-    "test:critical": "playwright test --grep @critical",
+    "test:critical": "playwright test --grep @critical --project=api --project=chromium",
     "test:full": "playwright test",
     "report": "playwright show-report",
     "lint": "eslint .",
-    "typecheck": "tsc --noEmit"
+    "typecheck": "tsc --noEmit",
+    "flaky-report": "node scripts/flaky-report.ts test-results/results.json"
   },
   "devDependencies": {
     "@playwright/test": "1.63.0",

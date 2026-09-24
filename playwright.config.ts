@@ -33,5 +33,18 @@ export default defineConfig({
       use: { ...devices['Desktop Chrome'], storageState: AUTH_FILE },
       dependencies: ['setup'],
     },
+    // Other engines only run in the full ring (nightly). Chromium alone covers the critical ring.
+    {
+      name: 'firefox',
+      testDir: './tests/e2e',
+      use: { ...devices['Desktop Firefox'], storageState: AUTH_FILE },
+      dependencies: ['setup'],
+    },
+    {
+      name: 'webkit',
+      testDir: './tests/e2e',
+      use: { ...devices['Desktop Safari'], storageState: AUTH_FILE },
+      dependencies: ['setup'],
+    },
   ],
 });
