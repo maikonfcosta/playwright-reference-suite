@@ -62,6 +62,10 @@ jobs:
       - name: Flaky report
         run: npm run flaky-report
 
+      # Served next to the HTML report on Pages; the README badge reads it through shields.io.
+      - name: Result badge
+        run: npm run badge
+
       - uses: actions/upload-artifact@v7
         with:
           name: full-report
