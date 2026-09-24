@@ -1,0 +1,89 @@
+name: nightly
+
+on:
+  schedule:
+    - cron: '0 6 * * *' # 03:00 in Brazil
+  workflow_dispatch:
+
+jobs:
+  full:
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    strategy:
+      fail-fast: false
+      matrix:
+        shard: [1, 2, 3]
+    steps:
+      - uses: actions/checkout@v7
+      - uses: actions/setup-node@v7
+        with:
+          node-version: 24
+          cache: npm
+      - run: npm ci
+      - run: npx playwright install --with-deps
+
+      # Each shard gets its own app and database, so shards never share data.
+      - name: Start Conduit
+        run: docker compose up -d --build --wait
+
+      - name: Full ring, shard ${{ matrix.shard }}/3
+        run: npx playwright test --shard=${{ matrix.shard }}/3 --reporter=blob
+
+      - uses: actions/upload-artifact@v7
+        if: ${{ !cancelled() }}
+        with:
+          name: blob-report-${{ matrix.shard }}
+          path: blob-report
+          retention-days: 1
+
+  report:
+    if: ${{ !cancelled() }}
+    needs: full
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v7
+      - uses: actions/setup-node@v7
+        with:
+          node-version: 24
+          cache: npm
+      - run: npm ci
+
+      - uses: actions/download-artifact@v8
+        with:
+          path: all-blob-reports
+          pattern: blob-report-*
+          merge-multiple: true
+
+      - name: Merge shard reports
+        run: npx playwright merge-reports --reporter=html,json ./all-blob-reports
+        env:
+          PLAYWRIGHT_JSON_OUTPUT_NAME: test-results/results.json
+
+      - name: Flaky report
+        run: npm run flaky-report
+
+      - uses: actions/upload-artifact@v7
+        with:
+          name: full-report
+          path: playwright-report
+          retention-days: 14
+
+      - uses: actions/upload-pages-artifact@v5
+        if: ${{ !github.event.repository.private }}
+        with:
+          path: playwright-report
+
+  pages:
+    # GitHub Pages is not available for private repos on the free plan.
+    if: ${{ !cancelled() && !github.event.repository.private }}
+    needs: report
+    runs-on: ubuntu-latest
+    permissions:
+      pages: write
+      id-token: write
+    environment:
+      name: github-pages
+      url: ${{ steps.deploy.outputs.page_url }}
+    steps:
+      - id: deploy
+        uses: actions/deploy-pages@v5
