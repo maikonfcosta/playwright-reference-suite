@@ -1,0 +1,23 @@
+{
+  "name": "playwright-reference-suite",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "app:up": "docker compose up -d --build --wait",
+    "app:down": "docker compose down -v",
+    "test": "playwright test",
+    "test:critical": "playwright test --grep @critical",
+    "test:full": "playwright test",
+    "report": "playwright show-report",
+    "lint": "eslint .",
+    "typecheck": "tsc --noEmit"
+  },
+  "devDependencies": {
+    "@playwright/test": "1.63.0",
+    "@types/node": "^24.0.0",
+    "eslint": "^10.11.0",
+    "eslint-plugin-playwright": "^2.12.0",
+    "typescript": "~6.0.0",
+    "typescript-eslint": "^8.70.1"
+  }
+}
