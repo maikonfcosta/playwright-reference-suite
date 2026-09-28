@@ -13,6 +13,10 @@ RUN git init -q . \
  && git fetch -q --depth 1 origin "$API_REF" \
  && git checkout -q FETCH_HEAD
 
+# Evaluation branches of ai-ci-triage add patches here to plant a product bug. On main the folder is empty.
+COPY docker/patches/api/ /patches/
+RUN for p in /patches/*.patch; do [ -e "$p" ] || continue; git apply "$p" && echo "applied $p"; done
+
 RUN bun install --frozen-lockfile \
  && bun run prepare \
  && bun run db:generate \

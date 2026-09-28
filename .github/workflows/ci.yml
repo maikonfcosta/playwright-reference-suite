@@ -4,6 +4,8 @@ on:
   push:
     branches: [main]
   pull_request:
+  # Runs a branch without opening a pull request (used by ai-ci-triage's evaluation branches).
+  workflow_dispatch:
 
 concurrency:
   group: ci-${{ github.ref }}
@@ -44,6 +46,7 @@ jobs:
         run: npm run test:critical
 
       - name: Classify failures
+        id: classify
         if: ${{ !cancelled() }}
         uses: maikonfcosta/failure-classifier@v1
         with:
@@ -53,6 +56,21 @@ jobs:
       - name: Flaky report
         if: ${{ !cancelled() }}
         run: npm run flaky-report
+
+      - name: Collect the report and the verdicts
+        if: ${{ !cancelled() }}
+        env:
+          VERDICTS: ${{ steps.classify.outputs.verdicts }}
+        run: '[ -f "$VERDICTS" ] && cp "$VERDICTS" test-results/verdicts.json || true'
+
+      - uses: actions/upload-artifact@v7
+        if: ${{ !cancelled() }}
+        with:
+          name: triage-input
+          path: |
+            test-results/results.json
+            test-results/verdicts.json
+          retention-days: 14
 
       - name: API logs on failure
         if: failure()

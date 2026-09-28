@@ -14,6 +14,10 @@ RUN git init -q . \
  && git checkout -q FETCH_HEAD \
  && git submodule update -q --init --depth 1
 
+# Evaluation branches of ai-ci-triage add patches here to plant a product bug. On main the folder is empty.
+COPY docker/patches/web/ /patches/
+RUN for p in /patches/*.patch; do [ -e "$p" ] || continue; git apply "$p" && echo "applied $p"; done
+
 # Upstream calls the public API directly. Point it to /api so nginx can proxy to our container.
 RUN sed -i 's#https://api.realworld.show/api#/api#' src/app/core/interceptors/api.interceptor.ts \
  && grep -q '`/api${req.url}`' src/app/core/interceptors/api.interceptor.ts
