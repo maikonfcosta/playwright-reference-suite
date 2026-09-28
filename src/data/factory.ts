@@ -14,10 +14,10 @@ export function newUser(prefix = 'qa'): NewUser {
 export function newArticle(overrides: Partial<NewArticle> = {}): NewArticle {
   const id = uid();
   return {
+    ...overrides,
     title: `Release checklist ${id}`,
     description: 'What we verify before shipping',
     body: 'Smoke the critical paths, check the error budget, then ship.',
     tagList: ['qa'],
-    ...overrides,
   };
 }
