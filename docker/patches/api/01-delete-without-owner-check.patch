@@ -1,0 +1,14 @@
+diff --git a/server/routes/api/articles/[slug]/index.delete.ts b/server/routes/api/articles/[slug]/index.delete.ts
+index 887669b..fc11a9e 100644
+--- a/server/routes/api/articles/[slug]/index.delete.ts
++++ b/server/routes/api/articles/[slug]/index.delete.ts
+@@ -22,9 +22,6 @@ const slug = getRouterParam(event, 'slug');
+         throw new HttpException(404, {errors: {article: ['not found']}});
+     }
+ 
+-    if (existingArticle.author.id !== auth.id) {
+-        throw new HttpException(403, {errors: {article: ['forbidden']}});
+-    }
+     await usePrisma().article.delete({
+         where: {
+             slug,
