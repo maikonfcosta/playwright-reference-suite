@@ -1,0 +1,15 @@
+diff --git a/server/routes/api/users/login.post.ts b/server/routes/api/users/login.post.ts
+index 3280a59..932174b 100644
+--- a/server/routes/api/users/login.post.ts
++++ b/server/routes/api/users/login.post.ts
+@@ -22,6 +22,10 @@ export default defineEventHandler(async (event) => {
+         },
+     });
+ 
++    if (!foundUser) {
++        throw new HttpException(404, {errors: {email: ['not found']}});
++    }
++
+     if (foundUser) {
+         const match = await bcrypt.compare(password, foundUser.password);
+ 
