@@ -1,0 +1,13 @@
+diff --git a/src/app/core/auth/services/jwt.service.ts b/src/app/core/auth/services/jwt.service.ts
+index 691f43c..c72f2ee 100644
+--- a/src/app/core/auth/services/jwt.service.ts
++++ b/src/app/core/auth/services/jwt.service.ts
+@@ -3,7 +3,7 @@ import { Injectable } from '@angular/core';
+ @Injectable({ providedIn: 'root' })
+ export class JwtService {
+   getToken(): string {
+-    return window.localStorage['jwtToken'];
++    return window.localStorage['jwt'];
+   }
+ 
+   saveToken(token: string): void {
