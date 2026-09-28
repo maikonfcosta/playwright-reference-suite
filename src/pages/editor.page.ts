@@ -35,7 +35,7 @@ export class EditorPage {
         /\/api\/articles(\/[^/]+)?$/.test(new URL(res.url()).pathname) &&
         ['POST', 'PUT'].includes(res.request().method()),
     );
-    await this.page.getByRole('button', { name: 'Publish Article' }).click();
+    await this.page.getByRole('button', { name: 'Publish', exact: true }).click();
     return saved;
   }
 }
