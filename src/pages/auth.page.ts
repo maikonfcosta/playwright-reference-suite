@@ -8,7 +8,7 @@ export class AuthPage {
 
   constructor(private readonly page: Page) {
     this.username = page.getByPlaceholder('Username');
-    this.email = page.getByPlaceholder('Email');
+    this.email = page.getByPlaceholder('Email address');
     this.password = page.getByPlaceholder('Password');
     this.errors = page.locator('.error-messages');
   }
