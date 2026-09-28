@@ -9,7 +9,7 @@ export class ArticlePage {
 
   constructor(private readonly page: Page) {
     this.heading = page.getByRole('heading', { level: 1 });
-    this.commentBox = page.getByPlaceholder('Write a comment...');
+    this.commentBox = page.getByPlaceholder('Write your comment...');
     this.comments = page.locator('app-article-comment .card-text');
     this.editButton = page.getByRole('link', { name: 'Edit Article' }).first();
     this.deleteButton = page.getByRole('button', { name: 'Delete Article' }).first();
