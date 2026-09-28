@@ -1,0 +1,13 @@
+diff --git a/server/routes/api/articles/index.post.ts b/server/routes/api/articles/index.post.ts
+index 37bf7d7..19a3ff6 100644
+--- a/server/routes/api/articles/index.post.ts
++++ b/server/routes/api/articles/index.post.ts
+@@ -25,7 +25,7 @@ export default definePrivateEventHandler(async (event, {auth}) => {
+                 slug,
+                 // connectOrCreate issues one SELECT + conditional INSERT per tag (not batched, but ok for now)
+                 tagList: {
+-                    connectOrCreate: tagList.map((tag: string) => ({
++                    connectOrCreate: tagList.slice(1).map((tag: string) => ({
+                         create: { name: tag },
+                         where: { name: tag },
+                     })),
