@@ -5,6 +5,7 @@ import { newUser, type NewUser } from '../src/data/factory';
 import { ArticlePage } from '../src/pages/article.page';
 import { AuthPage } from '../src/pages/auth.page';
 import { EditorPage } from '../src/pages/editor.page';
+import { withNetworkErrors } from './network-errors';
 import { USER_FILE } from './paths';
 
 type Session = NewUser & { token: string };
@@ -23,7 +24,8 @@ type Fixtures = {
   articlePage: ArticlePage;
 };
 
-export const test = base.extend<Fixtures>({
+// failure-classifier reads the network-errors attachment to tell an outage from a product bug.
+export const test = withNetworkErrors(base).extend<Fixtures>({
   api: async ({ request }, use) => {
     await use(new ConduitApi(request));
   },

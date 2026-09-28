@@ -38,8 +38,17 @@ jobs:
       - name: Start Conduit
         run: docker compose up -d --build --wait
 
+      # The classifier below decides whether a red run blocks, so this step never fails the job itself.
       - name: Critical ring
+        continue-on-error: true
         run: npm run test:critical
+
+      - name: Classify failures
+        if: ${{ !cancelled() }}
+        uses: maikonfcosta/failure-classifier@v1
+        with:
+          report: test-results/results.json
+          health-url: http://localhost:4200/api/tags
 
       - name: Flaky report
         if: ${{ !cancelled() }}

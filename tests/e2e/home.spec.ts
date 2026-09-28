@@ -1,4 +1,4 @@
-import { test, expect } from '@playwright/test';
+import { test, expect } from '../fixtures';
 
 test('home page loads the global feed from our API', { tag: '@critical' }, async ({ page }) => {
   const articles = page.waitForResponse((res) => res.url().includes('/api/articles') && res.ok());
