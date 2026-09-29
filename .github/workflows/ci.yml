@@ -64,7 +64,7 @@ jobs:
               steps.classify.outputs.verdicts != '' &&
               hashFiles('test-results/results.json') != '' }}
         continue-on-error: true
-        uses: maikonfcosta/ai-ci-triage@5cf7d486b8861ee677bcedf529accc4050ba246a
+        uses: maikonfcosta/ai-ci-triage@9705cd79a826b265c04fe1967c2d177340c551b6
         with:
           report: test-results/results.json
           verdicts: ${{ steps.classify.outputs.verdicts }}
