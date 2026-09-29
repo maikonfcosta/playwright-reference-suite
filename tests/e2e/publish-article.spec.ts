@@ -11,7 +11,7 @@ test('author publishes an article and sees it rendered', { tag: '@critical' }, a
   expect(saved.status()).toBe(201);
   const { article } = await saved.json();
   await expect(page).toHaveURL(`/article/${article.slug}`);
-  await expect(articlePage.heading).toHaveText(draft.title);
+  await expect(articlePage.heading).toHaveText(draft.body);
   await expect(page.locator('.article-content strong')).toHaveText('bold');
   await expect(page.locator('.article-content .tag-list li')).toHaveText(['release', 'checklist']);
 
